@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Venegas Construction Owner</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;background:#111827;color:#f9fafb;margin:0;padding:20px}.box{max-width:520px;margin:0 auto;background:#1f2937;border-radius:16px;padding:20px}h1{margin-top:0}input,button{width:100%;box-sizing:border-box;min-height:48px;border-radius:10px;font-size:16px;padding:11px 12px}input{border:1px solid #4b5563;background:#111827;color:#fff}button{margin-top:10px;border:0;background:#b91c1c;color:#fff;font-weight:800}.muted{color:#9ca3af}.hidden{display:none}.card{margin-top:16px;padding:14px;background:#111827;border-radius:12px}
+</style>
+</head>
+<body>
+<main class="box">
+<h1>Owner Dashboard</h1>
+<p class="muted">Private page. Create or enter your owner PIN.</p>
+<div id="login">
+<input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="4–8 digit PIN">
+<input id="pin2" class="hidden" type="password" inputmode="numeric" maxlength="8" placeholder="Confirm PIN">
+<button id="go" type="button">Unlock</button>
+<p id="msg" class="muted"></p>
+</div>
+<div id="dashboard" class="hidden">
+<div class="card"><strong>Owner dashboard is ready.</strong><p class="muted">Shared crew records will appear here after the central database is connected.</p></div>
+<button id="lock" type="button">Lock Dashboard</button>
+</div>
+</main>
+<script>
+const KEY='vc_owner_pin_hash_v2';const $=id=>document.getElementById(id);const enc=new TextEncoder();async function hash(s){const b=await crypto.subtle.digest('SHA-256',enc.encode(s));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')}function first(){return !localStorage.getItem(KEY)}function setup(){if(first()){$('pin2').classList.remove('hidden');$('go').textContent='Create PIN'}}async function unlock(){const p=$('pin').value.trim();if(!/^\d{4,8}$/.test(p)){$('msg').textContent='Use a 4–8 digit PIN.';return}if(first()){if(p!==$('pin2').value.trim()){$('msg').textContent='PINs do not match.';return}localStorage.setItem(KEY,await hash(p))}else if(await hash(p)!==localStorage.getItem(KEY)){$('msg').textContent='Incorrect PIN.';return}$('login').classList.add('hidden');$('dashboard').classList.remove('hidden')}$('go').onclick=unlock;$('lock').onclick=()=>location.reload();setup();
+</script>
+</body>
+</html>
