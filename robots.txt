@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /vc-owner-4827.html
